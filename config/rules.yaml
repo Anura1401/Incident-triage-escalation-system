@@ -1,0 +1,130 @@
+# ==============================================================================
+# FIELD INCIDENT TRIAGE & SLA RULES CONFIGURATION
+# SINGLE SOURCE OF TRUTH FOR PRIORITIES, SLAS, CATEGORIES, AND KEYWORD RULES
+#
+# NOTE: ALL INCIDENTS, ROBOT IDS, AND SITES ARE 100% SYNTHETIC SIMULATION DATA.
+# SLA TARGETS ARE EXPLICIT DESIGN ASSUMPTIONS, NOT OFFICIAL COMPANY POLICIES.
+# ==============================================================================
+
+metadata:
+  system_name: "Teleop Fleet Field Incident Triage & Escalation System"
+  data_label: "SIMULATED SYNTHETIC DATA"
+  assumptions_disclaimer: "Design assumptions for teleop operations simulation, not company policy."
+
+# Assumed SLAs per priority level
+priorities:
+  P1:
+    level_name: "Critical / Safety"
+    response_sla_minutes: 15
+    resolution_sla_hours: 4
+    escalation_role: "Site Operations Lead & On-Call Robotics Lead"
+    notification_channel: "Immediate Alert Dispatch"
+    description: "Safety incident, emergency stop, collision, or full fleet/site standstill."
+  P2:
+    level_name: "Major Degradation"
+    response_sla_minutes: 120
+    resolution_sla_hours: 12
+    escalation_role: "Hardware/Network Support Specialist"
+    notification_channel: "Immediate Alert Dispatch"
+    description: "Severe degradation, gripper slippage, high latency (>500ms), or navigation drift."
+  P3:
+    level_name: "Minor / Workaround"
+    response_sla_minutes: 480
+    resolution_sla_hours: 48
+    escalation_role: "Field Support Queue Lead"
+    notification_channel: "Queued for Weekly VoC Digest"
+    description: "Non-critical hardware quirks, telemetry UI glitches, workaround available."
+  P4:
+    level_name: "Enhancement"
+    response_sla_minutes: 1440
+    resolution_sla_hours: 120
+    escalation_role: "Product / Operations Analyst"
+    notification_channel: "Queued for Weekly VoC Digest"
+    description: "Feature requests, ergonomic enhancements, operator console improvement suggestions."
+
+# 9 Fleet Incident Categories
+categories:
+  - "Safety Stop"
+  - "Gripper / End-Effector"
+  - "Latency / Connectivity"
+  - "Navigation"
+  - "Camera / Sensor"
+  - "Software Crash"
+  - "Operator Tool UI"
+  - "Data Capture Quality"
+  - "Feature Request / Enhancement"
+
+# Triage Classification Rules in Strict Precedence (First match wins)
+rules:
+  - id: "R0"
+    priority: "P1"
+    description: "Safety override: Safety Stop category or safety/injury/collision keywords"
+    categories:
+      - "Safety Stop"
+    keywords:
+      - "injury"
+      - "collision"
+      - "safety"
+      - "e-stop"
+      - "hazard"
+      - "near-miss"
+
+  - id: "R1"
+    priority: "P1"
+    description: "Software crash with catastrophic hang, deadlock, or blackout"
+    category_required: "Software Crash"
+    keywords:
+      - "hang"
+      - "deadlock"
+      - "frozen"
+      - "blackout"
+      - "segmentation fault"
+
+  - id: "R2"
+    priority: "P2"
+    description: "Core physical or network subsystem with degradation keywords"
+    categories:
+      - "Gripper / End-Effector"
+      - "Latency / Connectivity"
+      - "Navigation"
+    keywords:
+      - "slip"
+      - "drop"
+      - "spike"
+      - "packet loss"
+      - "drift"
+      - "jitter"
+      - "stuck"
+      - "timeout"
+      - "high ping"
+
+  - id: "R3"
+    priority: "P4"
+    description: "Feature Request category or enhancement keywords"
+    categories:
+      - "Feature Request / Enhancement"
+    keywords:
+      - "request"
+      - "suggestion"
+      - "shortcut"
+      - "enhancement"
+
+  - id: "R4"
+    priority: "P3"
+    description: "Fallback for minor issues: everything else defaults to P3. If no recognized keyword matched, needs_review is True"
+    categories:
+      - "Camera / Sensor"
+      - "Operator Tool UI"
+      - "Data Capture Quality"
+    keywords:
+      - "glitch"
+      - "flicker"
+      - "sluggish"
+      - "drift"
+      - "artifact"
+      - "soiled"
+      - "missing"
+      - "telemetry"
+      - "audio"
+      - "wear"
+      - "saturation"

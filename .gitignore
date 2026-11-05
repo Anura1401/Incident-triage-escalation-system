@@ -1,0 +1,21 @@
+# Environment & Secrets
+.env
+*.env.local
+
+# Python cache & build
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.pytest_cache/
+
+# Local databases and runtime state
+data/*.db
+data/tickets_escalated.csv
+
+# Local OS & Windows convenience wrappers
+python.cmd
+pytest.cmd
+.DS_Store
+Thumbs.db
+
